@@ -25,7 +25,7 @@ function addToCart(productId) {
     const product = products.find(p => p.id === productId);
     cart.push(product);
     document.getElementById('cart-count').innerText = cart.length;
-    alert(`${product.name} added to cart!`);
+    showCart();  
 }
 
 function showCart() {
@@ -33,7 +33,8 @@ function showCart() {
     cartItems.innerHTML = '';
     cart.forEach((item, index) => {
         const itemDiv = document.createElement('div');
-        itemDiv.innerHTML = `${item.name} - $${item.price.toFixed(2)} <button onclick="removeFromCart(${index})">Remove</button>`;
+        itemDiv.innerHTML = `${item.name} - $${item.price.toFixed(2)} 
+            <button onclick="removeFromCart(${index})">Remove</button>`;
         cartItems.appendChild(itemDiv);
     });
     document.getElementById('shopping-cart').classList.remove('hidden');
@@ -46,8 +47,25 @@ function removeFromCart(index) {
 }
 
 document.getElementById('cart-button').addEventListener('click', showCart);
+
 document.getElementById('checkout-button').addEventListener('click', () => {
-    alert('Proceeding to checkout...');
+    const checkoutDiv = document.getElementById('checkout-summary');
+    checkoutDiv.innerHTML = ""; 
+
+    if (cart.length === 0) {
+        checkoutDiv.innerHTML = "<p>Your cart is empty.</p>";
+        return;
+    }
+
+    checkoutDiv.innerHTML = "<h3>Checkout Summary</h3>";
+
+    let total = 0;
+    cart.forEach(item => {
+        checkoutDiv.innerHTML += `<p>${item.name} - $${item.price.toFixed(2)}</p>`;
+        total += item.price;
+    });
+
+    checkoutDiv.innerHTML += `<h4>Total: $${total.toFixed(2)}</h4>`;
 });
 
 displayProducts();
